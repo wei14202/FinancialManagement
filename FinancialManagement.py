@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 
-def age_percentage(age):
+def cpf_percentage(age):
     match age:
         case age if age <= 35:
             return 0.6217, 0.1891, 0.2162
@@ -15,6 +15,7 @@ def age_percentage(age):
         case _:
             return 0.0, 0.0, 0.0
 
+citizen = ["Malaysian", "Singaporean", "Others"]
 
 st.title("Financial Management")
 st.header("Information")
@@ -27,8 +28,8 @@ with c2:
 with c3:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
-citizenship = st.toggle("Are you citizen of Singapore?")
-if citizenship:
+citizenship = st.selectbox("Citizenship:", citizen)
+if citizenship == "Singaporean":
     cpf = gross * 0.37
     income = gross * 0.8
     st.subheader("Initial Value in your CPF account")
@@ -41,7 +42,7 @@ if citizenship:
     with co3:
         MSA = st.number_input("MSA account value")
     for i in range(duration):
-        oa, sa, msa = age_percentage(age + i)
+        oa, sa, msa = cpf_percentage(age + i)
         if gross * 13 < 96000: 
             NewOA = (OA + (cpf * oa * 13))
             OA = NewOA + ((OA + NewOA)/2)* 0.025
@@ -58,15 +59,48 @@ if citizenship:
             NewMSA = (MSA + (cpf * msa * 13))
             MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
     total_cpf = OA + SA + MSA
-    data = {
+    cpf_data = {
          "OA Account": [OA],
          "SA Account": [SA],
          "MSA Account": [MSA],
          "Total": [total_cpf]
     }
-    df = pd.DataFrame(data)
-    st.dataframe(df.T.style.format("S${:.2f}"))
+    cpf_df = pd.DataFrame(cpf_data)
+    st.dataframe(cpf_df.T.style.format("S${:.2f}"))
     st.text("these value might be lesser than actual due to the 1% of additional interest")
+elif citizenship == "Malaysian":
+    if gross < 5000:
+         epf = gross * 0.24
+         income = gross * 0.87
+    else:
+        epf = gross * 0.23
+        income = gross * 0.88
+        st.subheader("Initial Value in your CPF account")
+    st.text("You may check your account value in CPF Mobile app")
+    co1, co2, co3 = st.columns(3)
+    with co1:
+        ACC1 = st.number_input("Account 1 account value")
+    with co2:
+        ACC2 = st.number_input("Account 2 account value")
+    with co3:
+        ACC3 = st.number_input("Account 3 account value")
+    for i in range(duration):
+            NewACC1 = (ACC1 + (epf * 0.75 * 13))
+            ACC1 = NewACC1 + ((ACC1 + NewACC1)/2)* 0.025
+            NewACC2 = (ACC2 + (epf * 0.15 * 13))
+            ACC2 = NewACC2 + ((ACC2 + NewACC2)/2) * 0.025
+            NewACC3 = (ACC3 + (epf * 0.05 * 13))
+            ACC3 = NewACC3 + ((ACC3 + NewACC3)/2) * 0.025
+    total_epf = ACC1 + ACC2 + ACC3
+    epf_data = {
+         "Account 1": [ACC1],
+         "Account 2": [ACC2],
+         "Account 3": [ACC3],
+         "Total": [total_epf]
+    }
+    epf_df = pd.DataFrame(epf_data)
+    st.dataframe(epf_df.T.style.format("S${:.2f}"))
+    st.text("these value might be lesser than actual because the interest is calculated based on 2.5% of the total EPF value (minimum guaranteed rate)")
 else:
     income = gross
 
@@ -101,10 +135,18 @@ st.subheader(f"Dispensable Balance: {balance2}")
 
 down_saving = down_saving * duration * 13
 invest_saving = invest_saving * duration * 13
-if citizenship:
+if citizenship == "Singaporean":
     saving = {
     "Wage": gross,
+    "Saving(Down Payment)": [down_saving],
     "OA account + Saving(Down Payment)": [OA + down_saving],
+    "Saving & Investment": [invest_saving]
+    }
+elif citizenship == "Malaysian":
+    saving = {
+    "Wage": gross,
+    "Saving(Down Payment)": [down_saving],
+    "Account 2 + Saving(Down Payment)": [ACC2 + down_saving],
     "Saving & Investment": [invest_saving]
     }
 else:
