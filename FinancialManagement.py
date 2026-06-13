@@ -1,6 +1,4 @@
 
-from unittest import case
-
 import streamlit as st
 import pandas as pd
 
@@ -31,14 +29,6 @@ with c3:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
 citizenship = st.selectbox("Citizenship:", citizen)
-match citizenship:
-    case "Singaporean":
-        currency = "S$"
-    case "Malaysian":
-        currency = "RM"
-    case "Others":
-        currency = "$"
-        
 if citizenship == "Singaporean":
     cpf = gross * 0.37
     income = gross * 0.8
@@ -76,7 +66,7 @@ if citizenship == "Singaporean":
          "Total": [total_cpf]
     }
     cpf_df = pd.DataFrame(cpf_data)
-    st.dataframe(cpf_df.T.style.format(f"{currency}{{:.2f}}"))
+    st.dataframe(cpf_df.T.style.format("S${:.2f}"))
     st.text("these value might be lesser than actual due to the 1% of additional interest")
 elif citizenship == "Malaysian":
     if gross < 5000:
@@ -109,7 +99,7 @@ elif citizenship == "Malaysian":
          "Total": [total_epf]
     }
     epf_df = pd.DataFrame(epf_data)
-    st.dataframe(epf_df.T.style.format(f"{currency}{{:.2f}}"))
+    st.dataframe(epf_df.T.style.format("S${:.2f}"))
     st.text("these value might be lesser than actual because the interest is calculated based on 2.5% of the total EPF value (minimum guaranteed rate)")
 else:
     income = gross
@@ -117,9 +107,9 @@ else:
 st.header("Expenditure")
 st.subheader("Neccesary")
 if citizenship:
-    st.text(f"50% of income(after CPF deduction): {currency} {income * 0.5} is recommended.")
+    st.text(f"50% of income(after CPF deduction): S$ {income * 0.5} is recommended.")
 else:
-    st.text(f"50% of income: {currency} {income * 0.5} is recommended.")
+    st.text(f"50% of income: S$ {income * 0.5} is recommended.")
 c1, c2, c3, c4 = st.columns(4)
 with c1:
     rent = st.number_input("Mortgage/Rent:")
@@ -167,4 +157,4 @@ else:
     }
 df_saving = pd.DataFrame(saving)
 st.header("Overview of Saving")
-st.dataframe(df_saving.T.style.format(f"{currency}{{:.2f}}"))
+st.dataframe(df_saving.T.style.format("S${:.2f}"))
