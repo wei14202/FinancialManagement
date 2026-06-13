@@ -1,0 +1,118 @@
+
+import streamlit as st
+import pandas as pd
+
+def age_percentage(age):
+    match age:
+        case age if age <= 35:
+            return 0.6217, 0.1891, 0.2162
+        case age if age <= 45:
+            return 0.5677, 0.1891, 0.2432
+        case age if age <= 50:
+            return 0.5136, 0.2162, 0.2702
+        case age if age <= 55:
+            return 0.4055, 0.3108, 0.2837
+        case _:
+            return 0.0, 0.0, 0.0
+
+
+st.title("Financial Management")
+st.header("Information")
+
+c1, c2, c3 = st.columns(3)
+with c1:
+    gross = st.number_input("Total Wage:",0)
+with c2:
+    age =st.number_input("Age(maximum of 55):",0,55)
+with c3:
+    duration = st.number_input("Year:",0,99)
+OA = SA = MSA = 0
+citizenship = st.toggle("Are you citizen of Singapore?")
+if citizenship:
+    cpf = gross * 0.37
+    income = gross * 0.8
+    st.subheader("Initial Value in your CPF account")
+    st.text("You may check your account value in CPF Mobile app")
+    co1, co2, co3 = st.columns(3)
+    with co1:
+        OA = st.number_input("OA account value")
+    with co2:
+        SA = st.number_input("SA account value")
+    with co3:
+        MSA = st.number_input("MSA account value")
+    for i in range(duration):
+        oa, sa, msa = age_percentage(age + i)
+        if gross * 13 < 96000: 
+            NewOA = (OA + (cpf * oa * 13))
+            OA = NewOA + ((OA + NewOA)/2)* 0.025
+            NewSA = (SA + (cpf * sa * 13))
+            SA = NewSA + ((SA + NewSA)/2) * 0.04
+            NewMSA = (MSA + (cpf * msa * 13))
+            MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
+        else:
+            cpf = 96000 * 0.37
+            NewOA = (OA + (cpf * oa * 13))
+            OA = NewOA + ((OA + NewOA)/2)* 0.025
+            NewSA = (SA + (cpf * sa * 13))
+            SA = NewSA + ((SA + NewSA)/2) * 0.04
+            NewMSA = (MSA + (cpf * msa * 13))
+            MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
+    total_cpf = OA + SA + MSA
+    data = {
+         "OA Account": [OA],
+         "SA Account": [SA],
+         "MSA Account": [MSA],
+         "Total": [total_cpf]
+    }
+    df = pd.DataFrame(data)
+    st.dataframe(df.T.style.format("S${:.2f}"))
+    st.text("these value might be lesser than actual due to the 1% of additional interest")
+else:
+    income = gross
+
+st.header("Expenditure")
+st.subheader("Neccesary")
+if citizenship:
+    st.text(f"50% of income(after CPF deduction): S$ {income * 0.5} is recommended.")
+else:
+    st.text(f"50% of income: S$ {income * 0.5} is recommended.")
+c1, c2, c3, c4 = st.columns(4)
+with c1:
+    rent = st.number_input("Mortgage/Rent:")
+with c2:
+    food = st.number_input("Food:")
+with c3:
+    allowance = st.number_input("Allowance for Family:")
+with c4:
+    transport = st.number_input("Transport")
+n_total = rent+food+allowance+transport
+st.text(f"Total Neccesary Expenditure: {n_total}")
+balance1 = income - n_total
+st.text(f"balance: {balance1}")
+
+st.subheader("Saving & Investment")
+c1, c2 = st.columns(2)
+with c1:
+    down_saving = st.number_input("Saving for your desired or down payment:")
+with c2:
+    invest_saving = st.number_input("General Saving & Investment:")
+balance2 = balance1 - down_saving - invest_saving
+st.subheader(f"Dispensable Balance: {balance2}")
+
+down_saving = down_saving * duration * 13
+invest_saving = invest_saving * duration * 13
+if citizenship:
+    saving = {
+    "Wage": gross,
+    "OA account + Saving(Down Payment)": [OA + down_saving],
+    "Saving & Investment": [invest_saving]
+    }
+else:
+    saving = {
+    "Wage": gross,
+    "Saving(Down Payment)": [down_saving],
+    "Saving & Investment": [invest_saving]
+    }
+df_saving = pd.DataFrame(saving)
+st.header("Overview of Saving")
+st.dataframe(df_saving.T.style.format("S${:.2f}"))
