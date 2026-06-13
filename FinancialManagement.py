@@ -17,7 +17,7 @@ def cpf_percentage(age):
         case _:
             return 0.0, 0.0, 0.0
 
-citizen = ["Malaysian", "Singaporean", "Others"]
+citizen = ["Malaysian(Work in Malaysia)", "Singaporean(Work in Singapore)", "Others(Foreign worker in any country)"]
 
 st.title("Financial Management")
 st.header("Information")
