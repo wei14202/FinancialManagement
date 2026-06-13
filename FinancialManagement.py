@@ -31,6 +31,7 @@ with c3:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
 citizenship = st.selectbox("Citizenship:", citizen)
+st.text("This program will considered you are working in the country of your citizenship, and the wage is in the currency of your citizenship, if you are foreign worker with no cpf/epf, please select others.")
 match citizenship:
     case "Singaporean":
         currency = "S$"
