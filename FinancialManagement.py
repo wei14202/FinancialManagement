@@ -75,7 +75,7 @@ elif citizenship == "Malaysian":
     else:
         epf = gross * 0.23
         income = gross * 0.88
-        st.subheader("Initial Value in your KWSP account")
+    st.subheader("Initial Value in your KWSP account")
     st.text("You may check your account value in KWSP Mobile app")
     co1, co2, co3 = st.columns(3)
     with co1:
