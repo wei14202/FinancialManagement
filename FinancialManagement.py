@@ -142,7 +142,13 @@ c1, c2 = st.columns(2)
 with c1:
     down_saving = st.number_input("Saving for your desired or down payment:")
 with c2:
+    initial_down_saving = st.number_input("Initial Saving for your desired or down payment:")
+
+c1, c2 = st.columns(2)
+with c1:
     invest_saving = st.number_input("General Saving & Investment:")
+with c2:
+    initial_saving = st.number_input("Initial General Saving & Investment:")
 balance2 = balance1 - down_saving - invest_saving
 st.subheader(f"Dispensable Balance: {balance2}")
 
@@ -151,22 +157,22 @@ invest_saving = invest_saving * duration * 13
 if citizenship == "Singaporean":
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving],
+    "Saving(Down Payment)": [down_saving + initial_down_saving],
     "OA account + Saving(Down Payment)": [OA + down_saving],
-    "Saving & Investment": [invest_saving]
+    "Saving & Investment": [invest_saving + initial_saving]
     }
 elif citizenship == "Malaysian":
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving],
+    "Saving(Down Payment)": [down_saving + initial_down_saving],
     "Account 2 + Saving(Down Payment)": [ACC2 + down_saving],
-    "Saving & Investment": [invest_saving]
+    "Saving & Investment": [invest_saving + initial_saving]
     }
 else:
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving],
-    "Saving & Investment": [invest_saving]
+    "Saving(Down Payment)": [down_saving + initial_down_saving],
+    "Saving & Investment": [invest_saving + initial_saving]
     }
 df_saving = pd.DataFrame(saving)
 st.header("Overview of Saving")
