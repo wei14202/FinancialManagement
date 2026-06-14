@@ -11,7 +11,7 @@ def cpf_percentage(age):
         case age if age <= 45:
             return 0.5677, 0.1891, 0.2432
         case age if age <= 50:
-            return 0. 136, 0.2162, 0.2702
+            return 0.136, 0.2162, 0.2702
         case age if age <= 55:
             return 0.4055, 0.3108, 0.2837
         case _:
