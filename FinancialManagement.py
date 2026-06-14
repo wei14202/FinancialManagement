@@ -33,6 +33,8 @@ with c4:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
 aws = st.selectbox("AWS:",[12, 13])
+st.text("AWS is 12/13 months salary")
+
 citizenship = st.selectbox("Citizenship:", citizen)
 st.text("This program will considered you are working in the country of your citizenship, and the wage is in the currency of your citizenship, if you are foreign worker with no cpf/epf, please select others.")
 match citizenship:
@@ -155,25 +157,34 @@ st.subheader(f"Dispensable Balance: {balance2}")
 
 down_saving = down_saving * duration * aws
 invest_saving = invest_saving * duration * aws
+total_down_saving = down_saving + initial_down_saving
+total_invest_saving = invest_saving + initial_saving
+
+st.subheader("Expected Return for saving")
+rate = st.number_input("Expected Annual Return Rate(%):",0.0,100.0)/100 + 1
+for i in range(duration):
+    total_down_saving = total_down_saving * rate
+    total_invest_saving = total_invest_saving * rate
+
 if citizenship == "Singaporean":
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving + initial_down_saving],
+    "Saving(Down Payment)": [total_down_saving],
     "OA account + Saving(Down Payment)": [OA + down_saving],
-    "Saving & Investment": [invest_saving + initial_saving]
+    "Saving & Investment": [total_invest_saving]
     }
 elif citizenship == "Malaysian":
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving + initial_down_saving],
+    "Saving(Down Payment)": [total_down_saving],
     "Account 2 + Saving(Down Payment)": [ACC2 + down_saving],
-    "Saving & Investment": [invest_saving + initial_saving]
+    "Saving & Investment": [total_invest_saving]
     }
 else:
     saving = {
     "Wage": gross,
-    "Saving(Down Payment)": [down_saving + initial_down_saving],
-    "Saving & Investment": [invest_saving + initial_saving]
+    "Saving(Down Payment)": [total_down_saving],
+    "Saving & Investment": [total_invest_saving]
     }
 df_saving = pd.DataFrame(saving)
 st.header("Overview of Saving")
