@@ -87,7 +87,7 @@ if citizenship == "Singaporean":
 elif citizenship == "Malaysian":
     if gross < 5000:
          epf = gross * 0.24
-         income = gross * 0.87
+         income = gross * 0.87 + extra
     else:
         epf = gross * 0.23
         income = gross * 0.88 + extra
