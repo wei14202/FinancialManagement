@@ -71,6 +71,7 @@ if citizenship == "Singaporean":
         NewSA = (SA + (cpf * sa * aws))
         SA = NewSA + ((SA + NewSA)/2) * 0.04
         NewMSA = (MSA + (cpf * msa * aws))
+        MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
 
     total_cpf = OA + SA + MSA
     cpf_data = {
