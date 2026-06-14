@@ -16,7 +16,7 @@ def cpf_percentage(age):
 
 def get_user_input(labels, defaults = None):
     cols = st.columns(len(labels))
-    return {label: col[i].number_input(label, value=defaults[i] if defaults else 0) 
+    return {label: cols[i].number_input(label, value=defaults[i] if defaults else 0) 
             for i, label in enumerate(labels)}
 
 
