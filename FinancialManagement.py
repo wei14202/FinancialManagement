@@ -81,7 +81,7 @@ if citizenship == "Singaporean":
          "MSA Account": [MSA],
          "Total": [total_cpf]
     }
-    cpf_df = pd.DataFrame(cpf_data)
+    cpf_df = pd.DataFrame(cpf_data,index=["Value"])
     st.dataframe(cpf_df.T.style.format(f"{currency}{{:.2f}}"))
     st.text("these value might be lesser than actual due to the 1% of additional interest")
 elif citizenship == "Malaysian":
@@ -114,7 +114,7 @@ elif citizenship == "Malaysian":
          "Account 3": [ACC3],
          "Total": [total_epf]
     }
-    epf_df = pd.DataFrame(epf_data)
+    epf_df = pd.DataFrame(epf_data,index=["Value"])
     st.dataframe(epf_df.T.style.format(f"{currency}{{:.2f}}"))
     st.text("these value might be lesser than actual because the interest is calculated based on 2.5% of the total EPF value (minimum guaranteed rate)")
 else:
@@ -186,6 +186,6 @@ else:
     "Saving(Down Payment)": [total_down_saving],
     "Saving & Investment": [total_invest_saving]
     }
-df_saving = pd.DataFrame(saving)
+df_saving = pd.DataFrame(saving,index=["Value"])
 st.header("Overview of Saving")
 st.dataframe(df_saving.T.style.format(f"{currency}{{:.2f}}"))
