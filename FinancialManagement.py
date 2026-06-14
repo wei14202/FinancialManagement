@@ -1,6 +1,4 @@
-
-from unittest import case
-
+from pyparsing import col
 import streamlit as st
 import pandas as pd
 
@@ -17,10 +15,17 @@ def cpf_percentage(age):
         case _:
             return 0.0, 0.0, 0.0
 
+def get_user_input(labels, defaults = None):
+    cols = st.columns(len(labels))
+    return {label: col[i].number_input(label, value=defaults[i] if defaults else 0) 
+            for i, label in enumerate(labels)}
+
+
 citizen = ["Malaysian", "Singaporean", "Others"]
 
 st.title("Financial Management")
 st.header("Information")
+
 
 c1, c2, c3, c4 = st.columns(4)
 with c1:
@@ -31,6 +36,7 @@ with c3:
     age =st.number_input("Age(maximum of 55):",0,55)
 with c4:
     duration = st.number_input("Year:",0,99)
+
 OA = SA = MSA = 0
 aws = st.selectbox("AWS:",[12, 13])
 st.text("AWS is 12/13 months salary")
@@ -47,6 +53,8 @@ match citizenship:
         
 if citizenship == "Singaporean":
     cpf = gross * 0.37
+    if gross * aws > 96000:
+        cpf = 8000 * 0.37
     income = gross * 0.8 + extra
     st.subheader("Initial Value in your CPF account")
     st.text("You may check your account value in CPF Mobile app")
@@ -59,21 +67,12 @@ if citizenship == "Singaporean":
         MSA = st.number_input("MSA account value")
     for i in range(duration):
         oa, sa, msa = cpf_percentage(age + i)
-        if gross * aws < 96000: 
-            NewOA = (OA + (cpf * oa * aws))
-            OA = NewOA + ((OA + NewOA)/2)* 0.025
-            NewSA = (SA + (cpf * sa * aws))
-            SA = NewSA + ((SA + NewSA)/2) * 0.04
-            NewMSA = (MSA + (cpf * msa * aws))
-            MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
-        else:
-            cpf = 96000 * 0.37
-            NewOA = (OA + (cpf * oa * aws))
-            OA = NewOA + ((OA + NewOA)/2)* 0.025
-            NewSA = (SA + (cpf * sa * aws))
-            SA = NewSA + ((SA + NewSA)/2) * 0.04
-            NewMSA = (MSA + (cpf * msa * aws))
-            MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
+        NewOA = (OA + (cpf * oa * aws))
+        OA = NewOA + ((OA + NewOA)/2)* 0.025
+        NewSA = (SA + (cpf * sa * aws))
+        SA = NewSA + ((SA + NewSA)/2) * 0.04
+        NewMSA = (MSA + (cpf * msa * aws))
+
     total_cpf = OA + SA + MSA
     cpf_data = {
          "OA Account": [OA],
@@ -123,19 +122,13 @@ else:
 st.header("Expenditure")
 st.subheader("Neccesary")
 if citizenship:
-    st.text(f"50% of income(after CPF deduction): {currency} {income * 0.5} is recommended.")
-else:
+    st.text(f"50% of income(after CPF/EPF deduction): {currency} {income * 0.5} is recommended.")
+elif citizenship == "Others":
     st.text(f"50% of income: {currency} {income * 0.5} is recommended.")
-c1, c2, c3, c4 = st.columns(4)
-with c1:
-    rent = st.number_input("Mortgage/Rent:")
-with c2:
-    food = st.number_input("Food:")
-with c3:
-    allowance = st.number_input("Allowance for Family:")
-with c4:
-    transport = st.number_input("Transport")
-n_total = rent+food+allowance+transport
+
+neccesary = get_user_input(["Mortgage/Rent","Food","Transport","Allowance for Familty","Others"])
+n_total = sum(neccesary.values())
+
 st.text(f"Total Neccesary Expenditure: {n_total}")
 balance1 = income - n_total
 st.text(f"balance: {balance1}")
