@@ -21,5 +21,7 @@ The application is designed to be interactive. Simply input your monthly gross s
 *   Annual CPF contribution breakdown.
 *   Projected savings growth over time.
 
-
+## OnlineLink
+The application is uploaded to stramlit community cloud and can be accessed by using the URL below
+https://financialmanagement-gcyhrrqf8zv84p3gj4inmq.streamlit.app
 ```
