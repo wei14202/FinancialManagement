@@ -11,7 +11,7 @@ def cpf_percentage(age):
         case age if age <= 45:
             return 0.5677, 0.1891, 0.2432
         case age if age <= 50:
-            return 0.5136, 0.2162, 0.2702
+            return 0. 136, 0.2162, 0.2702
         case age if age <= 55:
             return 0.4055, 0.3108, 0.2837
         case _:
@@ -32,6 +32,7 @@ with c3:
 with c4:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
+aws = st.selectbox("AWS:",[12, 13])
 citizenship = st.selectbox("Citizenship:", citizen)
 st.text("This program will considered you are working in the country of your citizenship, and the wage is in the currency of your citizenship, if you are foreign worker with no cpf/epf, please select others.")
 match citizenship:
@@ -56,20 +57,20 @@ if citizenship == "Singaporean":
         MSA = st.number_input("MSA account value")
     for i in range(duration):
         oa, sa, msa = cpf_percentage(age + i)
-        if gross * 13 < 96000: 
-            NewOA = (OA + (cpf * oa * 13))
+        if gross * aws < 96000: 
+            NewOA = (OA + (cpf * oa * aws))
             OA = NewOA + ((OA + NewOA)/2)* 0.025
-            NewSA = (SA + (cpf * sa * 13))
+            NewSA = (SA + (cpf * sa * aws))
             SA = NewSA + ((SA + NewSA)/2) * 0.04
-            NewMSA = (MSA + (cpf * msa * 13))
+            NewMSA = (MSA + (cpf * msa * aws))
             MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
         else:
             cpf = 96000 * 0.37
-            NewOA = (OA + (cpf * oa * 13))
+            NewOA = (OA + (cpf * oa * aws))
             OA = NewOA + ((OA + NewOA)/2)* 0.025
-            NewSA = (SA + (cpf * sa * 13))
+            NewSA = (SA + (cpf * sa * aws))
             SA = NewSA + ((SA + NewSA)/2) * 0.04
-            NewMSA = (MSA + (cpf * msa * 13))
+            NewMSA = (MSA + (cpf * msa * aws))
             MSA = NewMSA + ((MSA + NewMSA)/2) * 0.04
     total_cpf = OA + SA + MSA
     cpf_data = {
@@ -98,11 +99,11 @@ elif citizenship == "Malaysian":
     with co3:
         ACC3 = st.number_input("Account 3 account value")
     for i in range(duration):
-            NewACC1 = (ACC1 + (epf * 0.75 * 13))
+            NewACC1 = (ACC1 + (epf * 0.75 * aws))
             ACC1 = NewACC1 + ((ACC1 + NewACC1)/2)* 0.025
-            NewACC2 = (ACC2 + (epf * 0.15 * 13))
+            NewACC2 = (ACC2 + (epf * 0.15 * aws))
             ACC2 = NewACC2 + ((ACC2 + NewACC2)/2) * 0.025
-            NewACC3 = (ACC3 + (epf * 0.05 * 13))
+            NewACC3 = (ACC3 + (epf * 0.05 * aws))
             ACC3 = NewACC3 + ((ACC3 + NewACC3)/2) * 0.025
     total_epf = ACC1 + ACC2 + ACC3
     epf_data = {
@@ -152,8 +153,8 @@ with c2:
 balance2 = balance1 - down_saving - invest_saving
 st.subheader(f"Dispensable Balance: {balance2}")
 
-down_saving = down_saving * duration * 13
-invest_saving = invest_saving * duration * 13
+down_saving = down_saving * duration * aws
+invest_saving = invest_saving * duration * aws
 if citizenship == "Singaporean":
     saving = {
     "Wage": gross,
