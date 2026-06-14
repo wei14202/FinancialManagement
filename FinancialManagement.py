@@ -22,12 +22,14 @@ citizen = ["Malaysian", "Singaporean", "Others"]
 st.title("Financial Management")
 st.header("Information")
 
-c1, c2, c3 = st.columns(3)
+c1, c2, c3, c4 = st.columns(4)
 with c1:
     gross = st.number_input("Total Wage:",0)
 with c2:
-    age =st.number_input("Age(maximum of 55):",0,55)
+    extra = st.number_input("Extra Income:",0)
 with c3:
+    age =st.number_input("Age(maximum of 55):",0,55)
+with c4:
     duration = st.number_input("Year:",0,99)
 OA = SA = MSA = 0
 citizenship = st.selectbox("Citizenship:", citizen)
@@ -42,7 +44,7 @@ match citizenship:
         
 if citizenship == "Singaporean":
     cpf = gross * 0.37
-    income = gross * 0.8
+    income = gross * 0.8 + extra
     st.subheader("Initial Value in your CPF account")
     st.text("You may check your account value in CPF Mobile app")
     co1, co2, co3 = st.columns(3)
@@ -85,7 +87,7 @@ elif citizenship == "Malaysian":
          income = gross * 0.87
     else:
         epf = gross * 0.23
-        income = gross * 0.88
+        income = gross * 0.88 + extra
     st.subheader("Initial Value in your KWSP account")
     st.text("You may check your account value in KWSP Mobile app")
     co1, co2, co3 = st.columns(3)
@@ -113,7 +115,7 @@ elif citizenship == "Malaysian":
     st.dataframe(epf_df.T.style.format(f"{currency}{{:.2f}}"))
     st.text("these value might be lesser than actual because the interest is calculated based on 2.5% of the total EPF value (minimum guaranteed rate)")
 else:
-    income = gross
+    income = gross + extra
 
 st.header("Expenditure")
 st.subheader("Neccesary")
